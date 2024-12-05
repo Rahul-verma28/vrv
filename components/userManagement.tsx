@@ -11,7 +11,7 @@ import {
   TableRow,
 } from "./ui/table";
 import { Input } from "./ui/input";
-import { PlusIcon } from "lucide-react";
+import { PlusIcon } from 'lucide-react';
 import { UserDialog } from "./userDialog";
 import {
   Select,
@@ -32,7 +32,7 @@ import {
   AlertDialogTrigger,
 } from "./ui/alert-dialog";
 
-interface User {
+export interface User {
   id: number;
   name: string;
   email: string;
@@ -83,7 +83,7 @@ export function UserManagement() {
     return matchesSearch && matchesRole && matchesStatus;
   });
 
-  const handleAddUser = (newUser: User) => {
+  const handleAddUser = (newUser: Omit<User, "id">) => {
     setUsers([...users, { ...newUser, id: users.length + 1 }]);
   };
 
@@ -98,7 +98,7 @@ export function UserManagement() {
   };
 
   return (
-    <div className="space-y-4 px-5">
+    <div className="space-y-4">
       <div className="flex justify-between items-center space-x-4">
         <div className="flex justify-between items-center space-x-2 md:space-x-4">
           <Input
@@ -143,11 +143,15 @@ export function UserManagement() {
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
-        {filteredUsers.length === 0 ? (
-          <div className="py-4 text-red-500">No data found</div>
-        ) : (
-          <TableBody>
-            {filteredUsers.map((user) => (
+        <TableBody>
+          {filteredUsers.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={5} className="text-center text-red-500">
+                No data found
+              </TableCell>
+            </TableRow>
+          ) : (
+            filteredUsers.map((user) => (
               <TableRow key={user.id}>
                 <TableCell>{user.name}</TableCell>
                 <TableCell>{user.email}</TableCell>
@@ -166,7 +170,7 @@ export function UserManagement() {
                     Edit
                   </Button>
                   <AlertDialog>
-                    <AlertDialogTrigger>
+                    <AlertDialogTrigger asChild>
                       <Button variant="destructive" size="sm">
                         Delete
                       </Button>
@@ -193,9 +197,9 @@ export function UserManagement() {
                   </AlertDialog>
                 </TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        )}
+            ))
+          )}
+        </TableBody>
       </Table>
       <UserDialog
         isOpen={isDialogOpen}
@@ -203,9 +207,9 @@ export function UserManagement() {
           setIsDialogOpen(false);
           setEditingUser(null);
         }}
-        onSave={(user: User) => {
+        onSave={(user: Omit<User, "id">) => {
           if (editingUser) {
-            handleEditUser(user);
+            handleEditUser({ ...user, id: editingUser.id });
           } else {
             handleAddUser(user);
           }

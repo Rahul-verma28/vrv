@@ -14,11 +14,31 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Checkbox } from "./ui/checkbox";
 
-const availablePermissions = ["create", "read", "update", "delete"];
+const availablePermissions = ["create", "read", "update", "delete"] as const;
 
-export function RoleDialog({ isOpen, onClose, onSave, role = null }: any) {
+type Permission = (typeof availablePermissions)[number];
+
+interface Role {
+  id?: number;
+  name: string;
+  permissions: Permission[];
+}
+
+interface RoleDialogProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSave: (role: Role) => void;
+  role?: Role | null;
+}
+
+export function RoleDialog({
+  isOpen,
+  onClose,
+  onSave,
+  role = null,
+}: RoleDialogProps) {
   const [name, setName] = useState("");
-  const [permissions, setPermissions] = useState<string[]>([]);
+  const [permissions, setPermissions] = useState<Permission[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -32,7 +52,7 @@ export function RoleDialog({ isOpen, onClose, onSave, role = null }: any) {
     setError(null); // Clear errors when dialog resets
   }, [role]);
 
-  const handlePermissionChange = (permission: string) => {
+  const handlePermissionChange = (permission: Permission) => {
     setPermissions((prev) =>
       prev.includes(permission)
         ? prev.filter((p) => p !== permission)
@@ -45,7 +65,7 @@ export function RoleDialog({ isOpen, onClose, onSave, role = null }: any) {
       setError("Please fill out all fields before saving.");
       return;
     }
-    onSave({ id: role ? role.id : null, name, permissions });
+    onSave({ id: role?.id, name, permissions });
     setName("");
     setPermissions([]);
     setError(null);
@@ -68,7 +88,11 @@ export function RoleDialog({ isOpen, onClose, onSave, role = null }: any) {
               ? "Edit role details and permissions"
               : "Add a new role to the system"}
           </DialogDescription>
-                  {error && <div className="text-red-500 col-span-4 text-xs mt-5 text-right">{error}</div>}
+          {error && (
+            <div className="text-red-500 col-span-4 text-xs mt-5 text-right">
+              {error}
+            </div>
+          )}
         </DialogHeader>
         <div className="grid gap-4 py-1">
           <div className="grid grid-cols-4 items-center gap-4">

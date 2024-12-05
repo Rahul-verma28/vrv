@@ -20,18 +20,36 @@ import {
   SelectValue,
 } from "./ui/select";
 
-export function UserDialog({ isOpen, onClose, onSave, user = null }: any) {
+interface User {
+  id?: number;
+  name: string;
+  email: string;
+  role: string;
+  status: string;
+}
+
+interface Errors {
+  name: string;
+  email: string;
+  role: string;
+  status: string;
+}
+
+interface UserDialogProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSave: (user: User) => void;
+  user?: User | null;
+}
+
+
+export function UserDialog({ isOpen, onClose, onSave, user = null }: UserDialogProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("");
   const [status, setStatus] = useState("");
 
-  const [errors, setErrors] = useState({
-    name: "",
-    email: "",
-    role: "",
-    status: "",
-  });
+  const [errors, setErrors] = useState<Partial<Errors>>({});  
 
   useEffect(() => {
     if (user) {
@@ -54,7 +72,7 @@ export function UserDialog({ isOpen, onClose, onSave, user = null }: any) {
   }, [user]);
 
   const validateForm = () => {
-    const newErrors: any = {};
+    const newErrors: Partial<Errors> = {};
     if (!name.trim()) newErrors.name = "Name is required.";
     if (!email.trim()) newErrors.email = "Email is required.";
     else if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = "Email is invalid.";
@@ -66,7 +84,7 @@ export function UserDialog({ isOpen, onClose, onSave, user = null }: any) {
 
   const handleSave = () => {
     if (validateForm()) {
-      onSave({ id: user ? user.id : null, name, email, role, status });
+      onSave({ id: user?.id, name, email, role, status });
       setName("");
       setEmail("");
       setRole("");

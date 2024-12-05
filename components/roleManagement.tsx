@@ -11,7 +11,7 @@ import {
   TableRow,
 } from "./ui/table";
 import { Input } from "./ui/input";
-import { PlusIcon } from "lucide-react";
+import { PlusIcon } from 'lucide-react';
 import { RoleDialog } from "./roleDialog";
 import {
   Select,
@@ -32,10 +32,14 @@ import {
   AlertDialogTrigger,
 } from "./ui/alert-dialog";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const availablePermissions = ["create", "read", "update", "delete"] as const;
+type Permission = (typeof availablePermissions)[number];
+
 interface Role {
   id: number;
   name: string;
-  permissions: string[];
+  permissions: Permission[];
 }
 
 // Mock data
@@ -57,11 +61,11 @@ export function RoleManagement() {
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
     const matchesPermission =
-      permissionFilter === "All" || role.permissions.includes(permissionFilter);
+      permissionFilter === "All" || role.permissions.includes(permissionFilter as Permission);
     return matchesSearch && matchesPermission;
   });
 
-  const handleAddRole = (newRole: Role) => {
+  const handleAddRole = (newRole: Omit<Role, "id">) => {
     setRoles([...roles, { ...newRole, id: roles.length + 1 }]);
   };
 
@@ -110,61 +114,61 @@ export function RoleManagement() {
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
-        {filteredRoles.length === 0 ? (
-          <div className="py-4 text-red-500">No data found</div>
-        ) : (
-          <TableBody>
-            {filteredRoles ? (
-              filteredRoles.map((role) => (
-                <TableRow key={role.id}>
-                  <TableCell>{role.name}</TableCell>
-                  <TableCell>{role.permissions.join(", ")}</TableCell>
-                  <TableCell className="flex">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="mr-2"
-                      onClick={() => {
-                        setEditingRole(role);
-                        setIsDialogOpen(true);
-                      }}
-                    >
-                      Edit
-                    </Button>
-                    <AlertDialog>
-                      <AlertDialogTrigger>
-                        <Button variant="destructive" size="sm">
-                          Delete
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>
-                            Are you absolutely sure?
-                          </AlertDialogTitle>
-                          <AlertDialogDescription>
-                            This action cannot be undone. This will permanently remove your data from our
-                            servers.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
-                          <AlertDialogAction
-                            onClick={() => handleDeleteRole(role.id)}
-                          >
-                            Continue
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-                  </TableCell>
-                </TableRow>
-              ))
-            ) : (
-              <div>No data Found</div>
-            )}
-          </TableBody>
-        )}
+        <TableBody>
+          {filteredRoles.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={3} className="text-center text-red-500">
+                No data found
+              </TableCell>
+            </TableRow>
+          ) : (
+            filteredRoles.map((role) => (
+              <TableRow key={role.id}>
+                <TableCell>{role.name}</TableCell>
+                <TableCell>{role.permissions.join(", ")}</TableCell>
+                <TableCell className="flex">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="mr-2"
+                    onClick={() => {
+                      setEditingRole(role);
+                      setIsDialogOpen(true);
+                    }}
+                  >
+                    Edit
+                  </Button>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="destructive" size="sm">
+                        Delete
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>
+                          Are you absolutely sure?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                          This action cannot be undone. This will permanently
+                          remove your data from our servers.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={() => handleDeleteRole(role.id)}
+                        >
+                          Continue
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </TableCell>
+              </TableRow>
+            ))
+          )}
+        </TableBody>
       </Table>
       <RoleDialog
         isOpen={isDialogOpen}
@@ -172,9 +176,9 @@ export function RoleManagement() {
           setIsDialogOpen(false);
           setEditingRole(null);
         }}
-        onSave={(role: Role) => {
+        onSave={(role: Omit<Role, "id">) => {
           if (editingRole) {
-            handleEditRole(role);
+            handleEditRole({ ...role, id: editingRole.id });
           } else {
             handleAddRole(role);
           }
@@ -186,3 +190,4 @@ export function RoleManagement() {
     </div>
   );
 }
+
