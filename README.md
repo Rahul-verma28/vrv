@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# RoleManagement Component
 
-## Getting Started
+## Overview
+The `RoleManagement` component provides an intuitive and interactive interface for managing user roles and their associated permissions. It is designed to handle CRUD operations for roles and includes advanced filtering and search capabilities to streamline role management.
 
-First, run the development server:
+### Key Features
+- **Role Management**: Add, edit, and delete roles dynamically.
+- **Permissions Handling**: Assign and display permissions for each role.
+- **Search and Filter**: Search roles by name and filter by permissions.
+- **Interactive UI**: Clean and responsive design using modern UI components.
+- **Error Handling**: Graceful error messages to handle API failures.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Technologies Used
+- **React.js**: Core library for building the UI.
+- **TypeScript**: Provides type safety.
+- **Tailwind CSS**: For responsive and modern styling.
+- **Lucide Icons**: Adds icons for improved UI interactivity.
+- **Custom UI Components**: Includes buttons, inputs, tables, and dialogs for seamless interaction.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Usage
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Adding a Role
+1. Click on the **Add Role** button.
+2. Fill in the role name and select the desired permissions.
+3. Save the role to update the list.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Editing a Role
+1. Locate the role in the table and click **Edit**.
+2. Modify the role details in the dialog.
+3. Save the changes.
 
-## Learn More
+### Deleting a Role
+1. Click the **Delete** button next to a role.
+2. Confirm the action in the dialog to permanently remove the role.
 
-To learn more about Next.js, take a look at the following resources:
+### Search and Filter
+- Use the search bar to find roles by name.
+- Filter roles by permissions using the dropdown menu.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Key Files
+- **`RoleManagement.tsx`**: Main component file.
+- **`ui/`**: Contains reusable UI components.
+- **`services/`**: Includes API service functions.
+- **`types.ts`**: Defines TypeScript types for roles and permissions.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Error Handling
+- Errors during API calls are displayed to the user as alerts.
+- All API errors are logged to the console for debugging purposes.
 
-## Deploy on Vercel
+## Future Enhancements
+- Add role assignment to specific users.
+- Enable bulk operations for role management.
+- Introduce role-specific analytics and insights.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
